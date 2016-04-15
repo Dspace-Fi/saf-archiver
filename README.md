@@ -1,6 +1,6 @@
-# SAF-packager
+# SAF Archiver
 
-SAF-packager is a program for creating Simple Archive Format archives
+SAF Archiver is a program for creating Simple Archive Format archives
 (see
 e.g. [https://wiki.duraspace.org/display/DSDOC6x/Importing+and+Exporting+Items+via+Simple+Archive+Format]). It
 creates SAF archives from CSV-files and was developed for University
