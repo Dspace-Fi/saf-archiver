@@ -1,16 +1,11 @@
 # Prepare CSV
 
-This is a simple program that transforms a CSV file to CSV form that
-is required by the `saf-packager` program. Transformation means
-basically rearranging columns and changing the separator tokens. It is
-probably useful mainly in the context of University of Eastern
-Finland's SoleCRIS to DSpace import -process, but provided here just
-in case it might provide useful for others.
+This is a simple program that transforms a CSV file to CSV form that is required by the `saf-packager` program. Transformation means basically rearranging columns and changing the separator tokens. It is probably useful mainly in the context of University of Eastern
+Finland's SoleCRIS to DSpace import -process, but provided here just in case it might provide useful for others.
 
 # Installation
 
-`prepare-csv` is a go-program with no external dependencies. To build
-it, go to source code folder and type
+`prepare-csv` is a go-program with no external dependencies. To build it, go to source code folder and type
 
 ```
 $ go build
@@ -24,11 +19,7 @@ which should result in executable `prepare-csv`.
 $ prepare-csv config.json input-filename.csv
 ```
 
-`prepare-csv` requires two input files, one is configuration file (see
-below) and another is the data file that is to be processed. Data file
-should be in CSV-format, default separator is ';', but can be
-specified in the configuration file. Processed CSV is written to
-stdout-stream an can be redirected to a file, if necessary, e.g.
+`prepare-csv` requires two input files, one is configuration file (see below) and another is the data file that is to be processed. Data file should be in CSV-format, default separator is ';', but can be specified in the configuration file. Processed CSV is written to stdout-stream an can be redirected to a file, if necessary, e.g.
 
 ```
 $ prepare-csv config.json input-filename.csv > output-file.csv
@@ -65,8 +56,4 @@ TODO document error conditions.
 
 # Author & License
 
-The program was written during 2016 in SURIMA (Suomi
-rinnakkaistallennuksen mallimaaksi - Finland for a model country in
-parallel publishing) -project, in the University of Eastern Finland by
-Ilja Sidoroff <ilja.sidoroff@uef.fi>. It is licensed with a MIT
-License.
+The program was written during 2016 in SURIMA (Suomi rinnakkaistallennuksen mallimaaksi - Finland for a model country in parallel publishing) -project, in the University of Eastern Finland by Ilja Sidoroff <ilja.sidoroff@uef.fi>. It is licensed with a MIT License.
