@@ -56,16 +56,17 @@ Configuration file is a JSON map with following contents:
  * `split-separator` is a string used to separate items within fields that have `split-by` definied
  * `columns` is a list containing column-maps
  * A column map is a map containing following keys:
-  ** `from` an integer (starting from zero) that specifies input column
-  ** `to` an integer (starting from zero) that specifies to which column input is mapped in output
-  ** `title` a string specifying the title of this column in output
-  ** `split-by` a string specifying a string used to separate items within fields in the input file
+   * `from` an integer (starting from zero) that specifies input column
+   * `to` an integer (starting from zero) that specifies to which column input is mapped in output
+   * `title` a string specifying the title of this column in output
+   * `split-by` a string specifying a string used to separate items within fields in the input file
   
 TODO document error conditions.
 
 # Author & License
 
-The program was written during SURIMA (Suomi rinnakkaistallennuksen
-mallimaaksi - Finland for a model country in parallel publishing)
--project, in the University of Eastern Finland by Ilja Sidoroff
-<ilja.sidoroff@uef.fi>. It is licensed with a MIT License.
+The program was written during 2016 in SURIMA (Suomi
+rinnakkaistallennuksen mallimaaksi - Finland for a model country in
+parallel publishing) -project, in the University of Eastern Finland by
+Ilja Sidoroff <ilja.sidoroff@uef.fi>. It is licensed with a MIT
+License.
