@@ -97,8 +97,6 @@ func main() {
 		conf.SplitSeparator = ";"
 	}
 
-	fmt.Println(conf)
-
 	// process file
 	fn := os.Args[2]
 
@@ -110,7 +108,7 @@ func main() {
 	defer infile.Close()
 
 	r := csv.NewReader(infile)
-	r.Comma = ';' //utf8.DecodeRuneInString(conf.InputSeparator) // potentially discard characters // TODO Fixme
+	r.Comma = rune(conf.InputSeparator[0]) // TODO works only with 8-bits
 	r.LazyQuotes = true
 
 	records, err := r.ReadAll()
