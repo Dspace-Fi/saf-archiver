@@ -20,7 +20,7 @@ type config struct {
 
 type Column struct {
 	From    int    `json:"from"`
-	To      int    `json:"to"`
+	Discard bool   `json:"discard"`
 	Title   string `json:"title"`
 	SplitBy string `json:"split-by"`
 }
@@ -37,18 +37,25 @@ func printSlice(xs []string, sep string, out io.Writer) {
 }
 
 func makeHeader(cols []Column) []string {
-	target := make([]string, len(cols))
+	var target []string
 
 	for _, e := range cols {
-		target[e.To] = e.Title
+		if !e.Discard {
+			target = append(target, e.Title)
+		}
 	}
 	return target
 }
 
 func processRecord(record []string, cols []Column, splitter string, sep string) []string {
 
-	target := make([]string, len(cols))
+	var target []string
 	for _, e := range cols {
+
+		if e.Discard {
+			continue
+		}
+
 		s := record[e.From]
 
 		// replace splitter strings, if necessary
@@ -60,7 +67,7 @@ func processRecord(record []string, cols []Column, splitter string, sep string) 
 			s = "\"" + s + "\""
 		}
 
-		target[e.To] = s
+		target = append(target, s)
 	}
 	return target
 }
