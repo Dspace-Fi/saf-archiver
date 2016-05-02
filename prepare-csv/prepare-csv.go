@@ -30,7 +30,7 @@ func printSlice(xs []string, sep string, out io.Writer) {
 	for i, e := range xs {
 		fmt.Fprint(out, e)
 		if (i + 1) < l {
-			fmt.Print(sep)
+			fmt.Fprint(out, sep)
 		}
 	}
 	fmt.Fprintln(out)
@@ -128,7 +128,8 @@ func main() {
 
 	// process records
 	for _, e := range records {
-		printSlice(processRecord(e, conf.Columns, conf.SplitSeparator, conf.OutputSeparator),
+		printSlice(processRecord(e, conf.Columns, conf.SplitSeparator,
+			conf.OutputSeparator),
 			conf.OutputSeparator, os.Stdout)
 	}
 }
