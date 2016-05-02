@@ -37,6 +37,10 @@ func makeDublinCore(schema string) *DublinCore {
 
 func makeDCValue(header string, value string) *DCValue {
 
+	if value == "" {
+		return nil
+	}
+
 	ys := strings.Split(header, ".")
 
 	if len(ys) < 1 || len(ys) > 3 {
