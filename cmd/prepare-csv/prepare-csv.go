@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -25,17 +24,6 @@ type Column struct {
 	SplitBy string `json:"split-by"`
 }
 
-func printSlice(xs []string, sep string, out io.Writer) {
-	l := len(xs)
-	for i, e := range xs {
-		fmt.Fprint(out, e)
-		if (i + 1) < l {
-			fmt.Fprint(out, sep)
-		}
-	}
-	fmt.Fprintln(out)
-}
-
 func makeHeader(cols []Column) []string {
 	var target []string
 
@@ -47,7 +35,7 @@ func makeHeader(cols []Column) []string {
 	return target
 }
 
-func processRecord(record []string, cols []Column, splitter string, sep string) []string {
+func processRecord(record []string, cols []Column, splitter string) []string {
 
 	var target []string
 	for _, e := range cols {
@@ -61,10 +49,6 @@ func processRecord(record []string, cols []Column, splitter string, sep string) 
 		// replace splitter strings, if necessary
 		if e.SplitBy != "" {
 			s = strings.Replace(s, e.SplitBy, splitter, -1)
-		}
-		// escape string, if it contains separator
-		if strings.Contains(s, sep) {
-			s = "\"" + s + "\""
 		}
 
 		target = append(target, s)
@@ -115,7 +99,7 @@ func main() {
 	defer infile.Close()
 
 	r := csv.NewReader(infile)
-	r.Comma = rune(conf.InputSeparator[0]) // TODO works only with 8-bits
+	r.Comma = rune(conf.InputSeparator[0]) // TODO works only with 8-bit characters
 	r.LazyQuotes = true
 
 	records, err := r.ReadAll()
@@ -124,12 +108,21 @@ func main() {
 		os.Exit(1)
 	}
 
-	printSlice(makeHeader(conf.Columns), conf.OutputSeparator, os.Stdout)
+	w := csv.NewWriter(os.Stdout)
+	w.Comma = rune(conf.OutputSeparator[0]) // TODO works only with 8-bit characters
+
+	if err := w.Write(makeHeader(conf.Columns)); err != nil {
+		fmt.Fprintf(os.Stderr, "Cannot write header to CSV: %v\n", err)
+		os.Exit(1)
+	}
 
 	// process records
 	for _, e := range records {
-		printSlice(processRecord(e, conf.Columns, conf.SplitSeparator,
-			conf.OutputSeparator),
-			conf.OutputSeparator, os.Stdout)
+		if err := w.Write(processRecord(e, conf.Columns, conf.SplitSeparator)); err != nil {
+			fmt.Fprintf(os.Stderr, "Cannot write record to CSV: %v\n", err)
+			os.Exit(1)
+		}
 	}
+
+	w.Flush()
 }
