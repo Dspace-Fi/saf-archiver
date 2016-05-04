@@ -35,7 +35,7 @@ func makeDublinCore(schema string) *DublinCore {
 	}
 }
 
-func makeDCValue(header string, value string) *DCValue {
+func makeDCValues(header string, value string) []DCValue {
 
 	if value == "" {
 		return nil
@@ -43,18 +43,28 @@ func makeDCValue(header string, value string) *DCValue {
 
 	ys := strings.Split(header, ".")
 
-	if len(ys) < 1 || len(ys) > 3 {
+	if len(ys) < 2 || len(ys) > 3 {
 		fmt.Fprintf(os.Stderr, "Invalid header: %v, has %d elements.\n", header, len(ys))
-		return nil // TODO might use proper error
+		return nil
 	}
 
-	dc := &DCValue{Element: ys[1], Value: value}
+	var dcvalues []DCValue
 
-	if len(ys) == 3 {
-		dc.Qualifier = ys[2]
+	vs := strings.Split(value, "||") // TODO from configuration?
+
+	for _, v := range vs {
+
+		dcvalue := DCValue{Element: ys[1], Value: v}
+
+		if len(ys) == 3 {
+			dcvalue.Qualifier = ys[2]
+		} else {
+			dcvalue.Qualifier = "none"
+		}
+		dcvalues = append(dcvalues, dcvalue)
 	}
 
-	return dc
+	return dcvalues
 }
 
 func xmlFilename(s string) string {
@@ -76,12 +86,12 @@ func processRecord(xs []string, headers []string) map[string]*DublinCore {
 
 		if _, ok := xmls[schema]; ok {
 			xmls[schema].DCValues = append(xmls[schema].DCValues,
-				*makeDCValue(header, value))
+				makeDCValues(header, value)...)
 
 		} else {
 			xmls[schema] = makeDublinCore(schema)
 			xmls[schema].DCValues = append(xmls[schema].DCValues,
-				*makeDCValue(header, value))
+				makeDCValues(header, value)...)
 		}
 	}
 	return xmls
