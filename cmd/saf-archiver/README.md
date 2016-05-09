@@ -18,10 +18,10 @@ which should result in executable `saf-archiver`
 # Usage
 
 ```
-$ saf-archiver input-filename.csv output-directory`
+$ saf-archiver input-filename.csv output-directory
 ```
 
-`saf-archiver` requires one input file, csv-datafile containing the imported information. You can use `prepare-csv` -program to format the input file. Another required parameter is output directory *that should not exist* before program is run. Created directory should contain a simple archive formatted package created from the inputted data, which can be zipped and imported to DSpace with `[dspace]/bin/dspace import` command.
+`saf-archiver` requires one input file, csv-datafile containing the imported information. You can use `prepare-csv` -program to format the input file. Another required parameter is output directory *that should not exist* before program is run. Created directory should contain a simple archive formatted package created from the inputted data, which can be optionally zipped and imported to DSpace with `[dspace]/bin/dspace import` command.
 
 # TODO
 

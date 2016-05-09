@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/csv"
 	"encoding/xml"
 	"flag"
@@ -75,6 +76,15 @@ func xmlFilename(s string) string {
 	}
 }
 
+func escapeEntities(s string) string {
+	buf := new(bytes.Buffer)
+	if err := xml.EscapeText(buf, []byte(s)); err == nil {
+		return buf.String()
+	} else {
+		return ""
+	}
+}
+
 func processRecord(xs []string, headers []string) map[string]*DublinCore {
 
 	xmls := make(map[string]*DublinCore)
@@ -86,12 +96,12 @@ func processRecord(xs []string, headers []string) map[string]*DublinCore {
 
 		if _, ok := xmls[schema]; ok {
 			xmls[schema].DCValues = append(xmls[schema].DCValues,
-				makeDCValues(header, value)...)
+				makeDCValues(header, escapeEntities(value))...)
 
 		} else {
 			xmls[schema] = makeDublinCore(schema)
 			xmls[schema].DCValues = append(xmls[schema].DCValues,
-				makeDCValues(header, value)...)
+				makeDCValues(header, escapeEntities(value))...)
 		}
 	}
 	return xmls
@@ -188,12 +198,13 @@ func main() {
 			f, err := os.Create(fn)
 			if err != nil {
 				fmt.Fprintf(os.Stderr,
-					"Cannot create file %v! Skipping.\n",
-					fn)
+					"Cannot create file %v (%v)! Skipping.\n",
+					fn, err)
 				continue
 			}
-			defer f.Close()
 			writeDC(v, f)
+			f.Close()
+
 		}
 	}
 }
