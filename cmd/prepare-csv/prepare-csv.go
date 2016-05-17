@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/isido/saf-archiver"
 )
 
 type config struct {
@@ -18,10 +20,11 @@ type config struct {
 }
 
 type Column struct {
-	From    int    `json:"from"`
-	Discard bool   `json:"discard"`
-	Title   string `json:"title"`
-	SplitBy string `json:"split-by"`
+	From    int      `json:"from"`
+	Discard bool     `json:"discard"`
+	Title   string   `json:"title"`
+	SplitBy string   `json:"split-by"`
+	Filters []string `json:"filters"`
 }
 
 func makeHeader(cols []Column) []string {
@@ -51,8 +54,17 @@ func processRecord(record []string, cols []Column, splitter string) []string {
 			s = strings.Replace(s, e.SplitBy, splitter, -1)
 		}
 
+		// apply filters, if any
+		if len(e.Filters) != 0 {
+			for _, f := range e.Filters {
+				s = filter.Filters[f](s)
+			}
+		}
+
 		target = append(target, s)
+
 	}
+
 	return target
 }
 
