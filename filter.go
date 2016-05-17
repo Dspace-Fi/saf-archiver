@@ -5,7 +5,8 @@ import "strings"
 type Filter func(string) string
 
 var Filters = map[string]Filter{
-	"uef.isolang": dcLanguageIso,
+	"uef.isolang":    dcLanguageIso,
+	"uef.peerreview": eprintStatus,
 }
 
 // try to transform strings into dc.language.iso fields
@@ -40,6 +41,17 @@ func dcLanguageIso(s string) string {
 
 	if t == "venäjä" {
 		return "RU"
+	}
+
+	return s
+}
+
+// Peer review status from input "0" or "1"
+func eprintStatus(s string) string {
+	if s == "0" {
+		return "http://purl.org/eprint/status/NonPeerReviewed"
+	} else if s == "1" {
+		return "http://purl.org/eprint/status/PeerReviewed"
 	}
 
 	return s

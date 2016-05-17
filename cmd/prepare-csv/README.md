@@ -54,8 +54,8 @@ Configuration file is a JSON map with following contents:
    * `title` a string specifying the title of this column in output
    * `split-by` a string specifying a string used to separate items within fields in the input file
    * `filters` a list of strings specifying names of filters columns are filtered with. Filtering takes places after replacing the splitter string (`split-by`) and are applied in the order they are in the list. The up-to-date names can be found in the source code file `filter.go` and they are listed also below (hopefully up-to-date as well):
-     * `uef.isolang` : replace language string with its ISO-639-1 code, eg. "suomi" -> "FI". Source languages are primary those found in UEF's SoleCRIS system.
-
+     * `uef.isolang` replace language string with its ISO-639-1 code, eg. "suomi" -> "FI". Source languages are primary those found in UEF's SoleCRIS system.
+     * `uef.peerreview` peer review status (eprint.status), map 0/1 to either http://purl.org/eprint/status/PeerReviewed or http://purl.org/eprint/status/NonPeerReviewed
 Columns are output in the order they are in the `columns` list.
 
 # TODO
