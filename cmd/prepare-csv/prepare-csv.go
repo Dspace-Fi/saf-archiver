@@ -57,7 +57,20 @@ func processRecord(record []string, cols []Column, splitter string) []string {
 		// apply filters, if any
 		if len(e.Filters) != 0 {
 			for _, f := range e.Filters {
-				s = filter.Filters[f](s)
+
+				fn, ok := filter.Filters[f]
+
+				if ok {
+					s = fn(s)
+				} else {
+					fmt.Fprintf(os.Stderr, "Cannot find filter %v! Aborting!\n", f)
+					fmt.Fprintf(os.Stderr, "Available filters: ")
+					for k := range filter.Filters {
+						fmt.Fprintf(os.Stderr, "%v ", k)
+					}
+					fmt.Fprintln(os.Stderr)
+					os.Exit(1)
+				}
 			}
 		}
 

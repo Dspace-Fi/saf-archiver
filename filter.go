@@ -1,12 +1,17 @@
 package filter
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 type Filter func(string) string
 
 var Filters = map[string]Filter{
 	"uef.isolang":    dcLanguageIso,
 	"uef.peerreview": eprintStatus,
+	"uef.type":       eprintType,
+	"uef.doi":        doi,
 }
 
 // try to transform strings into dc.language.iso fields
@@ -55,4 +60,67 @@ func eprintStatus(s string) string {
 	}
 
 	return s
+}
+
+// Try to map from SoleCRIS to ePrintTypes
+func eprintType(s string) string {
+
+	// Journal Article
+	if s == "Ammatilliset aikakauslehtiartikkelit" ||
+		s == "Muut aikakauslehtiartikkelit" ||
+		s == "Tieteelliset aikakauslehtiartikkelit" {
+		return "http://purl.org/eprint/type/JournalArticle"
+	}
+
+	// Book Item
+	if s == "Artikkelit tieteellisissä kokoomateoksissa" ||
+		s == "Artikkelit muissa kokoomateoksissa" {
+		return "http://purl.org/eprint/type/BookItem"
+	}
+
+	// Book
+	if s == "Ammatilliset kirjat" ||
+		s == "Tieteelliset kirjat" ||
+		s == "Toimitetut ammatilliset kirjat / lehden erikoisnumerot" ||
+		s == "Toimitetut  tieteelliset kirjat / lehden erikoisnumerot" ||
+		s == "Yleistajuiset kirjat" {
+		return "http://purl.org/eprint/type/Book"
+	}
+
+	// Thesis
+	if s == "Väitöskirjat" {
+		return "http://purl.org/eprint/type/Thesis"
+	}
+
+	return s
+}
+
+// Try to convert doi's to http://doi.org/doi:xxx -format
+// This filter is woefully underspecified and specific to
+// UEF SoleCRIS conventions.
+// See i.e. for http://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page
+// http://blog.crossref.org/2015/08/doi-regular-expressions.html
+// for guidance in writing better logic
+func doi(s string) string {
+
+	if s == "-" { // means no doi in UEF input convention
+		return ""
+	}
+
+	if strings.HasPrefix(s, "http://") { // if it's http, leave it as it is
+		return s
+	}
+
+	if strings.HasPrefix(strings.ToLower(s), "doi:") { // add http-prefix, trust that the rest is correct doi
+		return "http://doi.org/" + s
+	}
+
+	// try doi-regexp (does work for majority of cases, but not for all of them
+	if matched, _ := regexp.MatchString(`^10.\d{4,9}/[-._;()/:A-Z0-9]+$`, s); matched {
+		return "http://doi.org/doi:" + s
+	}
+
+	// otherwise don't do anything
+	return s
+
 }

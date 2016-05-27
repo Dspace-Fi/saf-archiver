@@ -19,7 +19,7 @@ which should result in executable `prepare-csv`.
 $ prepare-csv config.json input-filename.csv
 ```
 
-`prepare-csv` requires two input files, one is configuration file (see below) and another is the data file that is to be processed. Data file should be in CSV-format, default separator is ';', but can be specified in the configuration file. Processed CSV is written to stdout-stream an can be redirected to a file, if necessary, e.g.
+`prepare-csv` requires two input files, one is configuration file (see below) and another is the data file that is to be processed. Data file should be in CSV-format, default separator is ';', but can be specified in the configuration file. The file should not contain a header file, i.e. all lines are processed. Processed CSV is written to stdout-stream an can be redirected to a file, if necessary, e.g.
 
 ```
 $ prepare-csv config.json input-filename.csv > output-file.csv
@@ -56,12 +56,9 @@ Configuration file is a JSON map with following contents:
    * `filters` a list of strings specifying names of filters columns are filtered with. Filtering takes places after replacing the splitter string (`split-by`) and are applied in the order they are in the list. The up-to-date names can be found in the source code file `filter.go` and they are listed also below (hopefully up-to-date as well):
      * `uef.isolang` replace language string with its ISO-639-1 code, eg. "suomi" -> "FI". Source languages are primary those found in UEF's SoleCRIS system.
      * `uef.peerreview` peer review status (eprint.status), map 0/1 to either http://purl.org/eprint/status/PeerReviewed or http://purl.org/eprint/status/NonPeerReviewed
+	 * `uef.type` tries to map document types used in UEF's SoleCRIS system into ePrintTypes.
+	 * `uef.doi` tries to format dois into urls (10.1111/etc -> http://doi.org/doi:10.1111/etc) if it seems likely to succeed.
 Columns are output in the order they are in the `columns` list.
-
-# TODO
-
- * document error conditions
- * add more error checking
 
 # Author & License
 
