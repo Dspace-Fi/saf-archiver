@@ -122,12 +122,12 @@ func main() {
 	var mds []string
 
 	if *metadata != "" {
+		*metadata = strings.Trim(*metadata, `"`)
 		mds = strings.Split(*metadata, ",")
+		os.Exit(0)
 	} else {
 		mds = nil
 	}
-
-	fmt.Println(mds)
 
 	dirs := list_leaf_directories(basedir)
 	for _, d := range dirs {

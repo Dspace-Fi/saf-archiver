@@ -20,7 +20,7 @@ $ add-file [-m metadata1,metadata2,...] added-file target-directory
 
 Adds a single file `added-file` to the *leaf-directory* of `target-directory`. If `target-directory` is not a leaf-directory, the file is added to all leaf-directories of `target-directory`.
 
-`contents` file is updated with added file's name, and optionally with SAF-specific metadata, eg. `bundle:LICENSE` or `description:DESCRIPTION`. Additional metadata is given with `-m` option. Multiple metadata items can be separated with a comma (,).
+`contents` file is updated with added file's name, and optionally with SAF-specific metadata, eg. `bundle:LICENSE` or `description:DESCRIPTION`. Additional metadata is given with `-m` option. Multiple metadata items can be separated with a comma (,). If metadata has spaces in it, use quotes (") for option string.
 
 # Author
 
