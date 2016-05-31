@@ -21,16 +21,11 @@ which should result in executable `saf-archiver`
 $ saf-archiver input-filename.csv output-directory
 ```
 
-`saf-archiver` requires one input file, csv-datafile containing the imported information. You can use `prepare-csv` -program to format the input file. Another required parameter is output directory *that should not exist* before program is run. Created directory should contain a simple archive formatted package created from the inputted data, which can be optionally zipped and imported to DSpace with `[dspace]/bin/dspace import` command.
-
-# TODO
-
- * more documentation
- * handle files in archive
+`saf-archiver` requires one input file, csv-datafile containing the imported information. You can use `prepare-csv` -program to format the input file. Another required parameter is output directory *that should not exist* before program is run. Created directory should contain a simple archive formatted package created from the inputted data, which can be optionally zipped and imported to DSpace with `[dspace]/bin/dspace import` command. `saf-archiver` handles only metadata - you can add files to generated archive with `add-file` command.
 
 # Author
 
 (C) University of Eastern Finland 2016
 
-The program was written during 2016 in SURIMA (Suomi rinnakkaistallennuksen mallimaaksi - Finland for a model country in parallel publishing) -project, in the University of Eastern Finland by Ilja Sidoroff ilja.sidoroff@uef.fi. It is licensed with a MIT License.
+The program was written during 2016 in SURIMA (Suomi rinnakkaistallennuksen mallimaaksi) project, in the University of Eastern Finland by Ilja Sidoroff <ilja.sidoroff@uef.fi>. It is licensed with a MIT License.
 
