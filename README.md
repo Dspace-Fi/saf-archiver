@@ -1,8 +1,10 @@
 # Tools for building Simple Archive Format files
 
-Utilities for building Simple Archive Format files suitable for DSpace import. See directory `cmd` and respective commands for more information.
+Utilities for building Simple Archive Format files suitable for DSpace import. See directory `cmd` and respective commands for more information. Simple Archive Format is a format suitable for importing items into DSpace digital repository <http://dspace.org>. For more information about Simple Archive Format, see DSpace wiki <https://wiki.duraspace.org/display/DSDOC6x/Importing+and+Exporting+Items+via+Simple+Archive+Format>.
 
-Build e.g. with
+# Installation & Usage
+
+Copy source files to `GOPATH` or use `$ go get github/isido/saf-archiver`. Then go to the source directory and build with
 
 ```
 $ go build cmd/prepare-csv/prepare-csv.go
