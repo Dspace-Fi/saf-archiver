@@ -12,6 +12,8 @@ import (
 
 const contentfile = "contents"
 
+var verbose *bool
+
 func is_leaf(path string) bool {
 
 	fs, err := ioutil.ReadDir(path)
@@ -75,7 +77,10 @@ func add_file_metadata(fn string, md string) error {
 }
 
 func add_file(fn string, dir string, mds []string) {
-	fmt.Println(fn, dir)
+
+	if *verbose {
+		fmt.Printf("Adding file %v to directory %v, with metadata %v.\n", fn, dir, mds)
+	}
 	bn := filepath.Base(fn)
 	target := filepath.Join(dir, bn)
 	if _, err := os.Stat(target); err == nil {
@@ -106,6 +111,7 @@ func add_file(fn string, dir string, mds []string) {
 func main() {
 
 	metadata := flag.String("m", "", "Additional metadata for file, optionally separated with comma")
+	verbose = flag.Bool("v", false, "Verbose operation")
 
 	flag.Parse()
 	args := flag.Args()
@@ -124,7 +130,6 @@ func main() {
 	if *metadata != "" {
 		*metadata = strings.Trim(*metadata, `"`)
 		mds = strings.Split(*metadata, ",")
-		os.Exit(0)
 	} else {
 		mds = nil
 	}
