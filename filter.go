@@ -95,7 +95,7 @@ func eprintType(s string) string {
 	return s
 }
 
-// Try to convert doi's to http://doi.org/doi:xxx -format
+// Try to convert doi's to http://doi.org/xxx -format
 // This filter is woefully underspecified and specific to
 // UEF SoleCRIS conventions.
 // See i.e. for http://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page
@@ -103,21 +103,23 @@ func eprintType(s string) string {
 // for guidance in writing better logic
 func doi(s string) string {
 
+	lc := strings.ToLower(s) // use lower case for all but simple tests
+
 	if s == "-" { // means no doi in UEF input convention
 		return ""
 	}
 
-	if strings.HasPrefix(s, "http://") { // if it's http, leave it as it is
+	if strings.HasPrefix(lc, "http://") { // if it's http, leave it as it is
 		return s
 	}
 
-	if strings.HasPrefix(strings.ToLower(s), "doi:") { // add http-prefix, trust that the rest is correct doi
-		return "http://doi.org/" + s
+	if strings.HasPrefix(lc, "doi:") { // add http-prefix, trust that the rest is correct doi
+		return "http://doi.org/" + s[4:]
 	}
 
 	// try doi-regexp (does work for majority of cases, but not for all of them
-	if matched, _ := regexp.MatchString(`^10.\d{4,9}/[-._;()/:A-Z0-9]+$`, s); matched {
-		return "http://doi.org/doi:" + s
+	if matched, _ := regexp.MatchString(`^10.\d{4,9}/[-._;()/:A-Za-z0-9]+$`, s); matched {
+		return "http://doi.org/" + s
 	}
 
 	// otherwise don't do anything
