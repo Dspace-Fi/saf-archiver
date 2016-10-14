@@ -8,11 +8,15 @@ import (
 type Filter func(string) string
 
 var Filters = map[string]Filter{
-	"uef.isolang":    dcLanguageIso,
-	"uef.peerreview": eprintStatus,
-	"uef.type":       eprintType,
-	"uef.doi":        doi,
+	"uef.isolang":       dcLanguageIso,
+	"uef.peerreview":    eprintStatus,
+	"uef.type":          eprintType,
+	"uef.doi":           doi,
+	"uef.openaire-type": openAireType,
 }
+
+// TODO: - provide generic comparison from tables
+// TODO: - read comparison tables from files
 
 // try to transform strings into dc.language.iso fields
 // using ISO 639-1 (two character codes)
@@ -90,6 +94,44 @@ func eprintType(s string) string {
 	// Thesis
 	if s == "Väitöskirjat" {
 		return "http://purl.org/eprint/type/Thesis"
+	}
+
+	return s
+}
+
+// Try to map from SoleCRIS to types used in OpenAIRE
+// See: https://www.kiwi.fi/display/Julkaisuarkistopalvelut/OpenAiren+vaatimat+muutokset
+func openAireType(s string) string {
+
+	// Article
+	if s == "Tieteelliset aikakauslehtiartikkelit" ||
+		s == "Muut aikakauslehtiartikkelit" ||
+		s == "Ammatilliset aikakauslehtiartikkelit" ||
+		s == "Artikkelit tieteellisissä kokoomateoksissa" ||
+		s == "Artikkelit muissa kokoomateoksissa" {
+		return "article"
+	}
+
+	// Types of theses
+	if s == "Väitöskirjat" {
+		return "doctoralThesis"
+	}
+
+	if s == "Lisensiaatintutkimukset" {
+		return "other" // No equivalent in OpenAIRE
+	}
+
+	if s == "Pro gradu -tutkielmat tai vastaavat" {
+		return "masterThesis" // SoleCRIS might include bachelor's theses here?
+	}
+
+	// Book
+	if s == "Ammatilliset kirjat" ||
+		s == "Tieteelliset kirjat" ||
+		s == "Toimitetut ammatilliset kirjat / lehden erikoisnumerot" ||
+		s == "Toimitetut  tieteelliset kirjat / lehden erikoisnumerot" ||
+		s == "Yleistajuiset kirjat" {
+		return "book"
 	}
 
 	return s
