@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/isido/saf-archiver"
+	"github.com/dspace-fi/saf-archiver"
 )
 
 type config struct {
