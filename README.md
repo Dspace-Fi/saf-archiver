@@ -4,7 +4,7 @@ Utilities for building Simple Archive Format files suitable for DSpace import. S
 
 # Installation & Usage
 
-Copy source files to `GOPATH` or use `$ go get github/dspace-fi/saf-archiver`. Then go to the source directory and build with
+Copy source files to `GOPATH` or use `$ go get github.com/dspace-fi/saf-archiver`. Then go to the source directory and build with
 
 ```
 $ go build cmd/prepare-csv/prepare-csv.go
