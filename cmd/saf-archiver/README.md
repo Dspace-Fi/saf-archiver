@@ -25,10 +25,12 @@ $ saf-archiver input-filename.csv output-directory
 
 CSV.input file format is as follows. Input separator for fields is ';', if the field itself contains ';', the field can be put in double quotes. If field contains multiple values, e.g. dc.contributor.author -field can contain many authors; they can be separated with "||" (two bars).
 
+The first line of the file is header row. Fields in headers must be metadata fieldnames, eg. 'dc.contributor.author', with '.' separating schema, element and optional qualifier. The program will complain if the header field does not contain at least schema and element. Field name can optionally be immediately followed by ":LANG", which indicates the metadata field language, which is included in the produced xml metadata.
+
+
 # TODO
 
  * Configurable input and value separators
- * Support for metadata language qualifier
 
 # Author
 

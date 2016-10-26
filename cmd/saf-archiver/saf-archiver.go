@@ -24,6 +24,7 @@ type DublinCore struct {
 type DCValue struct {
 	Element   string `xml:"element,attr"`
 	Qualifier string `xml:"qualifier,attr,omitempty"`
+	Language  string `xml:"language,attr,omitempty"`
 	Value     string `xml:",innerxml"`
 }
 
@@ -38,8 +39,23 @@ func makeDublinCore(schema string) *DublinCore {
 
 func makeDCValues(header string, value string) []DCValue {
 
+	// TODO process header only once
 	if value == "" {
 		return nil
+	}
+	lang := ""
+
+	// check for language
+	xs := strings.Split(header, ":")
+
+	if len(xs) > 1 {
+		if len(xs) > 2 {
+			fmt.Fprintf(os.Stderr, "Invalid header: %v can contain at most single language indicator ':'.\n",
+				header)
+			return nil
+		}
+		header = xs[0]
+		lang = xs[1]
 	}
 
 	ys := strings.Split(header, ".")
@@ -61,6 +77,9 @@ func makeDCValues(header string, value string) []DCValue {
 			dcvalue.Qualifier = ys[2]
 		} else {
 			dcvalue.Qualifier = "none"
+		}
+		if lang != "" {
+			dcvalue.Language = lang
 		}
 		dcvalues = append(dcvalues, dcvalue)
 	}
@@ -204,7 +223,6 @@ func main() {
 			}
 			writeDC(v, f)
 			f.Close()
-
 		}
 	}
 }

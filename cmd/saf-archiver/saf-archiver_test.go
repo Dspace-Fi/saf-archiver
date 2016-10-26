@@ -40,6 +40,9 @@ func TestMakeDCValues(t *testing.T) {
 			[]DCValue{
 				DCValue{Element: "title", Qualifier: "none", Value: "Frank Furter"},
 				DCValue{Element: "title", Qualifier: "none", Value: "Rey Dorado"}}},
+		{"dc.title:en", "Frank Furter",
+			[]DCValue{
+				DCValue{Element: "title", Qualifier: "none", Value: "Frank Furter", Language: "en"}}},
 	}
 
 	for _, pair := range tests {
@@ -65,13 +68,16 @@ func TestMakeDCValues(t *testing.T) {
 					)
 				}
 			}
-
 		}
 	}
 
+	// values that should return nil
 	nilTests := []dcvalueNilTest{
 		{header: "invalid", data: "dummy"},
 		{header: "dc.title", data: ""},
+		{header: "dc.title.title.title", data: ""},
+		{header: "dc.title::", data: ""},
+		{header: "dc.title:thesis.dc:xs", data: ""},
 	}
 
 	for _, tt := range nilTests {
