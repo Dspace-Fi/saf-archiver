@@ -16,13 +16,13 @@ which should result in executable `prepare-csv`.
 # Usage
 
 ```
-$ prepare-csv config.json input-filename.csv
+$ prepare-csv config.json input-file.csv
 ```
 
 `prepare-csv` requires two input files, one is configuration file (see below) and another is the data file that is to be processed. Data file should be in CSV-format, default separator is ';', but can be specified in the configuration file. The file should not contain a header file, i.e. all lines are processed. Processed CSV is written to stdout-stream an can be redirected to a file, if necessary, e.g.
 
 ```
-$ prepare-csv config.json input-filename.csv > output-file.csv
+$ prepare-csv config.json input-file.csv > output-file.csv
 ```
 
 # Configuration file
@@ -42,6 +42,9 @@ Configuration file is a JSON map with following contents:
     { "from": 9, "title": "dc.identifier.issn"},
     { "from": 12, "discard": true, "title": "dc.identifier.issue"},
     ]
+    "new-columns": [
+        { "title": "dc.citation", "generator": "uef.dc-citation" },
+    ]
 }
 ```
  * `input-separator` is a string (only first character is relevant) specifying the CSV separator in the input file (default: ";")
@@ -59,6 +62,10 @@ Configuration file is a JSON map with following contents:
 	 * `uef.type` tries to map document types used in UEF's SoleCRIS system into ePrintTypes.
 	 * `uef.doi` tries to format dois into urls (10.1111/etc -> http://doi.org/doi:10.1111/etc) if it seems likely to succeed.
 Columns are output in the order they are in the `columns` list.
+ * `new-columns`is a list containing new-column maps
+ * new-column map is a map containing the following keys
+     * `title` is a string containing the title for the generated column
+     * `generator` is a string specifying generator to generator. Generator names can be found in the source code file `generators.go`.
 
 # Author & License
 
