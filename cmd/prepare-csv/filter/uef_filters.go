@@ -5,15 +5,9 @@ import (
 	"strings"
 )
 
-type Filter func(string) string
-
-var Filters = map[string]Filter{
-	"uef.isolang":       dcLanguageIso,
-	"uef.peerreview":    eprintStatus,
-	"uef.type":          eprintType,
-	"uef.doi":           doi,
-	"uef.openaire-type": openAireType,
-}
+//
+// Filters used by the UEF
+//
 
 // TODO: - provide generic comparison from tables
 // TODO: - read comparison tables from files
@@ -21,7 +15,7 @@ var Filters = map[string]Filter{
 // try to transform strings into dc.language.iso fields
 // using ISO 639-1 (two character codes)
 // http://www.infoterm.info/standardization/iso_639_1_2002.php
-func dcLanguageIso(s string) string {
+func uefDcLanguageIso(s string) string {
 	t := strings.ToLower(s)
 
 	if t == "suomi" {
@@ -56,7 +50,7 @@ func dcLanguageIso(s string) string {
 }
 
 // Peer review status from input "0" or "1"
-func eprintStatus(s string) string {
+func uefEprintStatus(s string) string {
 	if s == "0" {
 		return "http://purl.org/eprint/status/NonPeerReviewed"
 	} else if s == "1" {
@@ -67,7 +61,7 @@ func eprintStatus(s string) string {
 }
 
 // Try to map from SoleCRIS to ePrintTypes
-func eprintType(s string) string {
+func uefEprintType(s string) string {
 
 	// Journal Article
 	if s == "Ammatilliset aikakauslehtiartikkelit" ||
@@ -101,7 +95,7 @@ func eprintType(s string) string {
 
 // Try to map from SoleCRIS to types used in OpenAIRE
 // See: https://www.kiwi.fi/display/Julkaisuarkistopalvelut/OpenAiren+vaatimat+muutokset
-func openAireType(s string) string {
+func uefOpenAireType(s string) string {
 
 	// Article
 	if s == "Tieteelliset aikakauslehtiartikkelit" ||
@@ -143,7 +137,7 @@ func openAireType(s string) string {
 // See i.e. for http://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page
 // http://blog.crossref.org/2015/08/doi-regular-expressions.html
 // for guidance in writing better logic
-func doi(s string) string {
+func uefDoi(s string) string {
 
 	lc := strings.ToLower(s) // use lower case for all but simple tests
 

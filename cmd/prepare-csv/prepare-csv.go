@@ -9,14 +9,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dspace-fi/saf-archiver"
+	"github.com/dspace-fi/saf-archiver/cmd/prepare-csv/filter"
+	"github.com/dspace-fi/saf-archiver/cmd/prepare-csv/generator"
 )
 
 type config struct {
-	InputSeparator  string   `json:"input-separator"`
-	OutputSeparator string   `json:"output-separator"`
-	SplitSeparator  string   `json:"split-separator"`
-	Columns         []Column `json:"columns"`
+	InputSeparator  string      `json:"input-separator"`
+	OutputSeparator string      `json:"output-separator"`
+	SplitSeparator  string      `json:"split-separator"`
+	Columns         []Column    `json:"columns"`
+	NewColumns      []NewColumn `json:"new-columns"`
 }
 
 type Column struct {
@@ -27,7 +29,12 @@ type Column struct {
 	Filters []string `json:"filters"`
 }
 
-func makeHeader(cols []Column) []string {
+type NewColumn struct {
+	Title     string `json:"title"`
+	Generator string `json:"generator"`
+}
+
+func makeHeader(cols []Column, new_cols []NewColumn) []string {
 	var target []string
 
 	for _, e := range cols {
@@ -35,10 +42,19 @@ func makeHeader(cols []Column) []string {
 			target = append(target, e.Title)
 		}
 	}
+	for _, e := range new_cols {
+		target = append(target, e.Title)
+	}
+
 	return target
 }
 
-func processRecord(record []string, cols []Column, splitter string) []string {
+// Process single line, aka record
+// record contains the original fields
+// cols contains the definitions for fields made from single columns
+// new_cols contains the definitions for fields made all (or any) of the columns
+// splitter is the
+func processRecord(record []string, cols []Column, new_cols []NewColumn, splitter string) []string {
 
 	var target []string
 	for _, e := range cols {
@@ -76,6 +92,26 @@ func processRecord(record []string, cols []Column, splitter string) []string {
 
 		target = append(target, s)
 
+	}
+
+	// apply generators
+	if len(new_cols) != 0 {
+		for _, g := range new_cols {
+			fn, ok := generator.Generators[g.Generator]
+
+			if ok {
+				s := fn(record)
+				target = append(target, s)
+			} else {
+				fmt.Fprintf(os.Stderr, "Cannot find generator %v! Aborting!\n", g)
+				fmt.Fprintf(os.Stderr, "Available generators: ")
+				for k := range generator.Generators {
+					fmt.Fprintf(os.Stderr, "%v ", k)
+				}
+				fmt.Fprintln(os.Stderr)
+				os.Exit(1)
+			}
+		}
 	}
 
 	return target
@@ -136,14 +172,14 @@ func main() {
 	w := csv.NewWriter(os.Stdout)
 	w.Comma = rune(conf.OutputSeparator[0]) // TODO works only with 8-bit characters
 
-	if err := w.Write(makeHeader(conf.Columns)); err != nil {
+	if err := w.Write(makeHeader(conf.Columns, conf.NewColumns)); err != nil {
 		fmt.Fprintf(os.Stderr, "Cannot write header to CSV: %v\n", err)
 		os.Exit(1)
 	}
 
 	// process records
 	for _, e := range records {
-		if err := w.Write(processRecord(e, conf.Columns, conf.SplitSeparator)); err != nil {
+		if err := w.Write(processRecord(e, conf.Columns, conf.NewColumns, conf.SplitSeparator)); err != nil {
 			fmt.Fprintf(os.Stderr, "Cannot write record to CSV: %v\n", err)
 			os.Exit(1)
 		}

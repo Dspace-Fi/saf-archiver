@@ -11,7 +11,7 @@ func TestDoi(t *testing.T) {
 	}
 
 	for _, pair := range tests {
-		res := doi(pair[0])
+		res := uefDoi(pair[0])
 		if res != pair[1] {
 			t.Error("doi: ", pair[0],
 				"expected: ", pair[1],
