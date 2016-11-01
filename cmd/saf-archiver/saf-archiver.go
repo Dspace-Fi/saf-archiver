@@ -151,6 +151,9 @@ func createDirectoryOrDie(dir string) {
 }
 
 func main() {
+
+	trailfile := flag.String("t", "", "Filename where to output relative directories for each item")
+
 	flag.Parse()
 
 	args := flag.Args()
@@ -182,6 +185,19 @@ func main() {
 	// create output directory
 	basedir := args[1]
 	createDirectoryOrDie(basedir)
+
+	// create trail file
+	var tf *os.File
+
+	if *trailfile != "" {
+		tf, err = os.Create(*trailfile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Cannot create trail file %v (%v)\n",
+				*trailfile, err)
+			os.Exit(1)
+		}
+		defer tf.Close()
+	}
 
 	// process records
 	headers := records[0]
@@ -222,6 +238,8 @@ func main() {
 				continue
 			}
 			writeDC(v, f)
+			// update trailfile
+			tf.WriteString(dir + "\n")
 			f.Close()
 		}
 	}

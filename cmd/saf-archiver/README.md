@@ -18,7 +18,7 @@ which should result in executable `saf-archiver`
 # Usage
 
 ```
-$ saf-archiver input-filename.csv output-directory
+$ saf-archiver [options] input-filename.csv output-directory
 ```
 
 `saf-archiver` requires one input file, csv-datafile containing the imported information. You can use `prepare-csv` -program to format the input file. Another required parameter is output directory *that should not exist* before program is run. Created directory should contain a simple archive formatted package created from the inputted data, which can be optionally zipped and imported to DSpace with `[dspace]/bin/dspace import` command. `saf-archiver` handles only metadata - you can add files to generated archive with `add-file` command.
@@ -27,6 +27,10 @@ CSV.input file format is as follows. Input separator for fields is ';', if the f
 
 The first line of the file is header row. Fields in headers must be metadata fieldnames, eg. 'dc.contributor.author', with '.' separating schema, element and optional qualifier. The program will complain if the header field does not contain at least schema and element. Field name can optionally be immediately followed by ":LANG", which indicates the metadata field language, which is included in the produced xml metadata.
 
+## Options
+```
+  -t trail-file	 Creates a file with a path in separate line for each item. Useful in conjuction with add-file.
+```
 
 # TODO
 
