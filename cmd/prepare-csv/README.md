@@ -41,7 +41,7 @@ Configuration file is a JSON map with following contents:
     { "from": 3, "title": "dc.language.iso", "filters": ["uef.isolang"]},
     { "from": 9, "title": "dc.identifier.issn"},
     { "from": 12, "discard": true, "title": "dc.identifier.issue"},
-    ]
+    ],
     "new-columns": [
         { "title": "dc.citation", "generator": "uef.dc-citation" },
     ]
