@@ -13,6 +13,7 @@ import (
 const contentfile = "contents"
 
 var verbose *bool
+var replace_spaces *bool
 
 func is_leaf(path string) bool {
 
@@ -82,6 +83,14 @@ func add_file(fn string, dir string, mds []string) {
 		fmt.Printf("Adding file %v to directory %v, with metadata %v.\n", fn, dir, mds)
 	}
 	bn := filepath.Base(fn)
+
+	if *replace_spaces {
+		bn = strings.Replace(bn, " ", "_", -1)
+		if *verbose {
+			fmt.Printf("Replaced spaces with underscores. New filename: %v\n", bn)
+		}
+	}
+
 	target := filepath.Join(dir, bn)
 	if _, err := os.Stat(target); err == nil {
 		fmt.Fprintf(os.Stderr, "File %v exists already, skipping...\n", target)
@@ -112,6 +121,7 @@ func main() {
 
 	metadata := flag.String("m", "", "Additional metadata for file, optionally separated with comma")
 	verbose = flag.Bool("v", false, "Verbose operation")
+	replace_spaces = flag.Bool("r", false, "Replace spaces with underscores in target filenames")
 
 	flag.Parse()
 	args := flag.Args()
